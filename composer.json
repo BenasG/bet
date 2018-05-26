@@ -1,0 +1,20 @@
+{
+    "name": "benasg/bet",
+    "description": "Bet package",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Benas",
+            "email": "benasg91@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "vanilla/garden-schema": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Benasg\\Bet\\" : "src/"
+        }
+    }
+}

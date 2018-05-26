@@ -1,0 +1,40 @@
+[
+    {
+        "name": "vanilla/garden-schema",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/vanilla/garden-schema.git",
+            "reference": "009802b184cd4c66a65257ba8b429f1a444b610a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/vanilla/garden-schema/zipball/009802b184cd4c66a65257ba8b429f1a444b610a",
+            "reference": "009802b184cd4c66a65257ba8b429f1a444b610a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.6.0"
+        },
+        "time": "2018-05-25T14:30:29+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Garden\\Schema\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Todd Burry",
+                "email": "todd@vanillaforums.com"
+            }
+        ],
+        "description": "A simple data validation and cleaning library based on JSON Schema."
+    }
+]
