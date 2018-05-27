@@ -1,10 +1,8 @@
 <?php
 
-namespace Benasg\Bet;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
-include 'Bet.php';
+use Benasg\Bet\Bet;
 
 $betslip = [
     // type: int
@@ -56,25 +54,3 @@ $bet->make($betslip);
 
 print_r($bet->getSuccess());
 print_r($bet->getBetslip());
-
-// $schema = \Garden\Schema\Schema::parse(
-//     [
-//         'player_id:i',
-//         'stake_amount:f',
-//         'selections:a' => ['id:i','odds:f']
-//     ]
-// );
-
-// try {
-//     // $u1 will be ['id' => 123, 'name' => 'John']
-//     $u1 = $schema->validate($betslip);
-    
-// } catch (Garden\Schema\ValidationException $ex) {
-//     // $ex->getMessage() will be: 'id is not a valid integer. name is required.'
-//     print_r($ex->getMessage());  
-// }
-
-
-
-
-
