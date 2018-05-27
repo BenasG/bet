@@ -8,7 +8,7 @@
             "email": "benasg91@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
         "vanilla/garden-schema": "dev-master"
