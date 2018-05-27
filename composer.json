@@ -1,14 +1,14 @@
 {
     "name": "benasg/bet",
     "description": "Bet package",
-    "type": "library",
+    "type": "package",
     "authors": [
         {
             "name": "Benas",
             "email": "benasg91@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "vanilla/garden-schema": "dev-master"
