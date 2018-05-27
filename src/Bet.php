@@ -32,6 +32,8 @@ class Bet
             $this->setSuccess($betslipValidation->getIsValid());
 
         } else {
+            $this->betslip['errors'][] = 'Betslip structure mismatch';
+            $this->setBetslip($this->betslip);
             $this->setSuccess(false);
         }
     }
@@ -51,8 +53,8 @@ class Bet
         $this->betslip = $betslip;
     }
 
-    public function getBetslip($betslip)
+    public function getBetslip()
     {
-        return $this->betSlip;
+        return $this->betslip;
     }
 }

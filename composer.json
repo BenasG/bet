@@ -1,7 +1,7 @@
 {
     "name": "benasg/bet",
     "description": "Bet package",
-    "type": "project",
+    "type": "library",
     "authors": [
         {
             "name": "Benas",

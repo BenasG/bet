@@ -54,7 +54,8 @@ $betslip = [
 $bet = new Bet();
 $bet->make($betslip);
 
-var_dump($bet->getSuccess());
+print_r($bet->getSuccess());
+print_r($bet->getBetslip());
 
 // $schema = \Garden\Schema\Schema::parse(
 //     [
