@@ -45,7 +45,7 @@ class BetslipValidation
         return $this->isValid;
     }
 
-    public function setBetslip($betSlip)
+    public function setBetslip($betslip)
     {
         $this->betslip = $betslip;
     }
@@ -116,7 +116,7 @@ class BetslipValidation
         foreach ($this->betslip['selections'] as $index => $selection) {
             if ($selection['odds'] < self::ODD_MIN) {
                 $this->betslip['selections'][$index]['errors'][] = sprintf($this->errorCodes[6], self::ODD_MIN);
-                $intervals = false;
+                $this->setIsValid(false);
             }
         }
 
@@ -128,7 +128,7 @@ class BetslipValidation
         foreach ($this->betslip['selections'] as $index => $selection) {
             if ($selection['odds'] > self::ODD_MAX) {
                 $this->betslip['selections'][$index]['errors'][] = sprintf($this->errorCodes[7], self::ODD_MAX);
-                $intervals = false;
+                $this->setIsValid(false);
             }
         }
 
