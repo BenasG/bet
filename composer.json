@@ -9,6 +9,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "vanilla/garden-schema": "dev-master"
     },
