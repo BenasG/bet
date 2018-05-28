@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Benasg\Bet\Betslip;
 use Benasg\Bet\BetslipValidation;
 
 class BetslipValidationTest extends TestCase
@@ -14,15 +15,16 @@ class BetslipValidationTest extends TestCase
         
         // Correct
         $betslipValidation->checkMinStakeAmount();
-        $this->assertEquals(1, $betslipValidation->getIsValid());
+        $this->assertEquals(1, $betslip->isValid());
 
         // Incorrect stake_amount
-        $betslip['stake_amount'] = 0;
+        $modifiedBetslip = $betslip->getBetslipArray();
+        $modifiedBetslip['stake_amount'] = 0;
+        $betslip->setBetslip($modifiedBetslip);
 
-        $betslipValidation->setBetslip($betslip);
         $betslipValidation->checkMinStakeAmount();
-        $this->assertEquals(0, $betslipValidation->getIsValid());
-        $this->assertEquals('Minimum stake amount is 0.3', $betslipValidation->getBetslip()['errors'][0]);
+        $this->assertEquals(0, $betslip->isValid());
+        $this->assertEquals('Minimum stake amount is 0.3', $betslip->getGlobalErrors()[0]);
     }
 
     /**
@@ -34,15 +36,16 @@ class BetslipValidationTest extends TestCase
         
         // Correct
         $betslipValidation->checkMaxStakeAmount();
-        $this->assertEquals(1, $betslipValidation->getIsValid());
+        $this->assertEquals(1, $betslip->isValid());
 
         // Incorrect stake_amount
-        $betslip['stake_amount'] = 999999;
+        $modifiedBetslip = $betslip->getBetslipArray();
+        $modifiedBetslip['stake_amount'] = 99999;
+        $betslip->setBetslip($modifiedBetslip);
 
-        $betslipValidation->setBetslip($betslip);
         $betslipValidation->checkMaxStakeAmount();
-        $this->assertEquals(0, $betslipValidation->getIsValid());
-        $this->assertEquals('Maximum stake amount is 10000', $betslipValidation->getBetslip()['errors'][0]);
+        $this->assertEquals(0, $betslip->isValid());
+        $this->assertEquals('Maximum stake amount is 10000', $betslip->getGlobalErrors()[0]);
     }
 
     /**
@@ -54,15 +57,16 @@ class BetslipValidationTest extends TestCase
         
         // Correct
         $betslipValidation->checkMinSelectionsNumber();
-        $this->assertEquals(1, $betslipValidation->getIsValid());
+        $this->assertEquals(1, $betslip->isValid());
 
         // Incorrect selections number
-        unset($betslip['selections'][0]);
+        $modifiedBetslip = $betslip->getBetslipArray();
+        unset($modifiedBetslip['selections'][0]);
+        $betslip->setBetslip($modifiedBetslip);
 
-        $betslipValidation->setBetslip($betslip);
         $betslipValidation->checkMinSelectionsNumber();
-        $this->assertEquals(0, $betslipValidation->getIsValid());
-        $this->assertEquals('Minimum number of selections is 1', $betslipValidation->getBetslip()['errors'][0]);
+        $this->assertEquals(0, $betslip->isValid());
+        $this->assertEquals('Minimum number of selections is 1', $betslip->getGlobalErrors()[0]);
     }
 
     /**
@@ -74,21 +78,22 @@ class BetslipValidationTest extends TestCase
         
         // Correct
         $betslipValidation->checkMaxSelectionsNumber();
-        $this->assertEquals(1, $betslipValidation->getIsValid());
+        $this->assertEquals(1, $betslip->isValid());
 
         // Incorrect selections number
+        $modifiedBetslip = $betslip->getBetslipArray();
         for ($i = 0; $i < 20; $i++) {
-            $betslip['selections'][] = [
+            $modifiedBetslip['selections'][] = [
                 'id' => 1,
                 'odds' => 1.601,
                 'errors' => [],
             ];
         }
+        $betslip->setBetslip($modifiedBetslip);
 
-        $betslipValidation->setBetslip($betslip);
         $betslipValidation->checkMaxSelectionsNumber();
-        $this->assertEquals(0, $betslipValidation->getIsValid());
-        $this->assertEquals('Maximum number of selections is 20', $betslipValidation->getBetslip()['errors'][0]);
+        $this->assertEquals(0, $betslip->isValid());
+        $this->assertEquals('Maximum number of selections is 20', $betslip->getGlobalErrors()[0]);
     }
 
     /**
@@ -100,21 +105,22 @@ class BetslipValidationTest extends TestCase
         
         // Correct
         $betslipValidation->checkSelectionUniqueId();
-        $this->assertEquals(1, $betslipValidation->getIsValid());
+        $this->assertEquals(1, $betslip->isValid());
 
         // Incorrect selection event id
-        $betslip['selections'][] = [
+        $modifiedBetslip = $betslip->getBetslipArray();
+        $modifiedBetslip['selections'][] = [
             'id' => 1,
             'odds' => 1.601,
             'errors' => [],
         ];
+        $betslip->setBetslip($modifiedBetslip);
 
-        $betslipValidation->setBetslip($betslip);
         $betslipValidation->checkSelectionUniqueId();
-        $this->assertEquals(0, $betslipValidation->getIsValid());
+        $this->assertEquals(0, $betslip->isValid());
         $this->assertEquals(
             'Duplicate IDs are not allowed',
-            $betslipValidation->getBetslip()['selections'][1]['errors'][0]
+            $betslip->getSelectionErrors()[0]
         );
     }
 
@@ -127,17 +133,18 @@ class BetslipValidationTest extends TestCase
         
         // Correct
         $betslipValidation->checkMinOddsInterval();
-        $this->assertEquals(1, $betslipValidation->getIsValid());
+        $this->assertEquals(1, $betslip->isValid());
 
         // Incorrect min odd
-        $betslip['selections'][0]['odds'] = 0;
+        $modifiedBetslip = $betslip->getBetslipArray();
+        $modifiedBetslip['selections'][0]['odds'] = 0;
+        $betslip->setBetslip($modifiedBetslip);
 
-        $betslipValidation->setBetslip($betslip);
         $betslipValidation->checkMinOddsInterval();
-        $this->assertEquals(0, $betslipValidation->getIsValid());
+        $this->assertEquals(0, $betslip->isValid());
         $this->assertEquals(
             'Minimum odds are 1',
-            $betslipValidation->getBetslip()['selections'][0]['errors'][0]
+            $betslip->getSelectionErrors()[0]
         );
     }
 
@@ -150,17 +157,18 @@ class BetslipValidationTest extends TestCase
         
         // Correct
         $betslipValidation->checkMaxOddsInterval();
-        $this->assertEquals(1, $betslipValidation->getIsValid());
+        $this->assertEquals(1, $betslip->isValid());
 
         // Incorrect max odd
-        $betslip['selections'][0]['odds'] = 99999;
+        $modifiedBetslip = $betslip->getBetslipArray();
+        $modifiedBetslip['selections'][0]['odds'] = 99999;
+        $betslip->setBetslip($modifiedBetslip);
 
-        $betslipValidation->setBetslip($betslip);
         $betslipValidation->checkMaxOddsInterval();
-        $this->assertEquals(0, $betslipValidation->getIsValid());
+        $this->assertEquals(0, $betslip->isValid());
         $this->assertEquals(
             'Maximum odds are 10000',
-            $betslipValidation->getBetslip()['selections'][0]['errors'][0]
+            $betslip->getSelectionErrors()[0]
         );
     }
 
@@ -173,16 +181,17 @@ class BetslipValidationTest extends TestCase
         
         // Correct
         $betslipValidation->checkExpectedWin();
-        $this->assertEquals(1, $betslipValidation->getIsValid());
+        $this->assertEquals(1, $betslip->isValid());
 
-        $betslip['selections'][0]['odds'] = 10000;
+        $modifiedBetslip = $betslip->getBetslipArray();
+        $modifiedBetslip['selections'][0]['odds'] = 10000;
+        $betslip->setBetslip($modifiedBetslip);
 
-        $betslipValidation->setBetslip($betslip);
         $betslipValidation->checkExpectedWin();
-        $this->assertEquals(0, $betslipValidation->getIsValid());
+        $this->assertEquals(0, $betslip->isValid());
         $this->assertEquals(
             'Maximum win amount is 20000',
-            $betslipValidation->getBetslip()['errors'][0]
+            $betslip->getGlobalErrors()[0]
         );
     }
 
@@ -203,7 +212,7 @@ class BetslipValidationTest extends TestCase
 
         return [
             [
-                $betslip
+                new Betslip($betslip)
             ]
         ];
     }

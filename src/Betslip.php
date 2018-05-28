@@ -14,6 +14,11 @@ class Betslip
 
     function __construct(array $betslip = [])
     {
+        $this->setBetslip($betslip);
+    }
+
+    public function setBetslip($betslip)
+    {
         $this->betslip = $betslip;
     }
 
@@ -37,7 +42,7 @@ class Betslip
         $this->betslip['errors'][] = $error;
     }
 
-    public function getBetslip()
+    public function getBetslipArray()
     {
         return $this->betslip;
     }
@@ -49,12 +54,12 @@ class Betslip
 
     public function getStakeAmount()
     {
-        return $this->betslip['stake_amount'];
+        return isset($this->betslip['stake_amount']) ? $this->betslip['stake_amount'] : 0;
     }
 
     public function getSelections() 
     {
-        return $this->betslip['selections'];
+        return isset($this->betslip['selections']) ? $this->betslip['selections'] : [];
     }
 
     public function getExpectedWin()

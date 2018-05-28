@@ -49,11 +49,12 @@ $betslip = [
     ],
 ];
 
-$response = (new Bet)->make($betslip);
+$response = (new Bet)->make();
 
-print_r($response->getBetslip()->getBetslip());
+print_r($response->getBetslip()->getBetslipArray());
 print_r($response->getBetslip()->getGlobalErrors());
 print_r($response->getBetslip()->getSelectionErrors());
+print_r($response->getBetslip()->getExpectedWin());
 
 //print_r($bet->getSuccess());
 //print_r($bet->getBetslip());

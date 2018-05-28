@@ -11,7 +11,7 @@ class Bet
     {
         $betslip = new Betslip($betslip);
 
-        if (StructureValidation::validateStructure($betslip->getStructure(), $betslip->getBetslip())) {
+        if (StructureValidation::validateStructure($betslip->getStructure(), $betslip->getBetslipArray())) {
             $betslipValidation = new BetslipValidation($betslip);
             
             $betslipValidation
