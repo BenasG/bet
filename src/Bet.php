@@ -5,18 +5,13 @@ namespace Benasg\Bet;
 class Bet
 {
     protected $success = true;
-    protected $betslip = [];
-    protected $structure = [
-        'player_id:i',
-        'stake_amount:f',
-        'selections:a' => ['id:i','odds:f']
-    ];
+    protected $betslip;
 
     public function make($betslip = [])
     {
-        $this->setBetslip($betslip);
+        $betslip = new Betslip($betslip);
 
-        if (StructureValidation::validateStructure($this->structure, $betslip)) {
+        if (StructureValidation::validateStructure($betslip->getStructure(), $betslip->getBetslip())) {
             $betslipValidation = new BetslipValidation($betslip);
             
             $betslipValidation
@@ -28,27 +23,20 @@ class Bet
                 ->checkMinOddsInterval()
                 ->checkMaxOddsInterval()
                 ->checkExpectedWin();
-            
-            $this->setSuccess($betslipValidation->getIsValid());
 
         } else {
-            $this->betslip['errors'][] = 'Betslip structure mismatch';
-            $this->setBetslip($this->betslip);
-            $this->setSuccess(false);
+            $betslip->addGlobalError('Betslip structure mismatch');
+            $betslip->setValid(false);
         }
+
+        $this->setBetslip($betslip);
+
+        $this->setSuccess($betslip->isValid());
+
+        return $this;
     }
 
-    public function setSuccess($success)
-    {
-        $this->success = $success;
-    }
-
-    public function getSuccess()
-    {
-        return $this->success;
-    }
-
-    public function setBetslip($betslip)
+    protected function setBetslip($betslip)
     {
         $this->betslip = $betslip;
     }
@@ -56,5 +44,15 @@ class Bet
     public function getBetslip()
     {
         return $this->betslip;
+    }
+
+    protected function setSuccess($success)
+    {
+        $this->success = $success;
+    }
+
+    public function isSuccess()
+    {
+        return $this->success;
     }
 }

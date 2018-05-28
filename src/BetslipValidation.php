@@ -12,8 +12,7 @@ class BetslipValidation
     const ODD_MAX = 10000;
     const MAXIMUM_WIN = 20000;
 
-    protected $betslip = [];
-    protected $isValid = true;
+    protected $betslip;
 
     protected $errorCodes = [
         0  => 'Unknown error',
@@ -30,22 +29,7 @@ class BetslipValidation
         11 => 'Insufficient balance',
     ];
 
-    function __construct($betslip = [])
-    {
-        $this->betslip = $betslip;
-    }
-
-    public function setIsValid($isValid)
-    {
-        $this->isValid = $isValid;
-    }
-
-    public function getIsValid()
-    {
-        return $this->isValid;
-    }
-
-    public function setBetslip($betslip)
+    function __construct(Betslip $betslip)
     {
         $this->betslip = $betslip;
     }
@@ -57,9 +41,9 @@ class BetslipValidation
 
     public function checkMinStakeAmount()
     {
-        if ($this->betslip['stake_amount'] < self::STAKE_AMOUNT_MIN) {
-            $this->betslip['errors'][] = sprintf($this->errorCodes[2], self::STAKE_AMOUNT_MIN);
-            $this->setIsValid(false);
+        if ($this->betslip->getStakeAmount() < self::STAKE_AMOUNT_MIN) {
+            $this->betslip->addGlobalError(sprintf($this->errorCodes[2], self::STAKE_AMOUNT_MIN));
+            $this->betslip->setValid(false);
         }
 
         return $this;
@@ -67,9 +51,9 @@ class BetslipValidation
 
     public function checkMaxStakeAmount()
     {
-        if ($this->betslip['stake_amount'] > self::STAKE_AMOUNT_MAX) {
-            $this->betslip['errors'][] = sprintf($this->errorCodes[3], self::STAKE_AMOUNT_MAX);
-            $this->setIsValid(false);
+        if ($this->betslip->getStakeAmount() > self::STAKE_AMOUNT_MAX) {
+            $this->betslip->addGlobalError(sprintf($this->errorCodes[3], self::STAKE_AMOUNT_MAX));
+            $this->betslip->setValid(false);
         }
 
         return $this;
@@ -77,9 +61,9 @@ class BetslipValidation
 
     public function checkMinSelectionsNumber()
     {
-        if (count($this->betslip['selections']) < self::SELECTIONS_MIN_NUMBER) {
-            $this->betslip['errors'][] = sprintf($this->errorCodes[4], self::SELECTIONS_MIN_NUMBER);
-            $this->setIsValid(false);
+        if (count($this->betslip->getSelections()) < self::SELECTIONS_MIN_NUMBER) {
+            $this->betslip->addGlobalError(sprintf($this->errorCodes[4], self::SELECTIONS_MIN_NUMBER));
+            $this->betslip->setValid(false);
         }
 
         return $this;
@@ -87,9 +71,9 @@ class BetslipValidation
 
     public function checkMaxSelectionsNumber()
     {
-        if (count($this->betslip['selections']) > self::SELECTIONS_MAX_NUMBER) {
-            $this->betslip['errors'][] = sprintf($this->errorCodes[5], self::SELECTIONS_MAX_NUMBER);
-            $this->setIsValid(false);
+        if (count($this->betslip->getSelections()) > self::SELECTIONS_MAX_NUMBER) {
+            $this->betslip->addGlobalError(sprintf($this->errorCodes[5], self::SELECTIONS_MAX_NUMBER));
+            $this->betslip->setValid(false);
         }
 
         return $this;
@@ -99,10 +83,10 @@ class BetslipValidation
     {   
         $events = [];
 
-        foreach ($this->betslip['selections'] as $index => $selection) {
+        foreach ($this->betslip->getSelections() as $index => $selection) {
             if (in_array($selection['id'], $events)) {
-                $this->setIsValid(false);
-                $this->betslip['selections'][$index]['errors'][] = $this->errorCodes[8];
+                $this->betslip->setValid(false);
+                $this->betslip->addSelectionError($index, $this->errorCodes[8]);
             } else {
                 $events[] = $selection['id'];
             }
@@ -113,10 +97,10 @@ class BetslipValidation
 
     public function checkMinOddsInterval()
     {
-        foreach ($this->betslip['selections'] as $index => $selection) {
+        foreach ($this->betslip->getSelections() as $index => $selection) {
             if ($selection['odds'] < self::ODD_MIN) {
-                $this->betslip['selections'][$index]['errors'][] = sprintf($this->errorCodes[6], self::ODD_MIN);
-                $this->setIsValid(false);
+                $this->betslip->addSelectionError($index, sprintf($this->errorCodes[6], self::ODD_MIN));
+                $this->betslip->setValid(false);
             }
         }
 
@@ -125,10 +109,10 @@ class BetslipValidation
 
     public function checkMaxOddsInterval()
     {
-        foreach ($this->betslip['selections'] as $index => $selection) {
+        foreach ($this->betslip->getSelections() as $index => $selection) {
             if ($selection['odds'] > self::ODD_MAX) {
-                $this->betslip['selections'][$index]['errors'][] = sprintf($this->errorCodes[7], self::ODD_MAX);
-                $this->setIsValid(false);
+                $this->betslip->addSelectionError($index, sprintf($this->errorCodes[7], self::ODD_MAX));
+                $this->betslip->setValid(false);
             }
         }
 
@@ -137,15 +121,9 @@ class BetslipValidation
 
     public function checkExpectedWin()
     {   
-        $odds = 1;
-
-        foreach ($this->betslip['selections'] as $selection) {
-            $odds *= $selection['odds'];
-        }
-
-        if ($this->betslip['stake_amount'] * $odds > self::MAXIMUM_WIN) {
-            $this->betslip['errors'][] = sprintf($this->errorCodes[9], self::MAXIMUM_WIN);
-            $this->setIsValid(false);
+        if ($this->betslip->getExpectedWin() > self::MAXIMUM_WIN) {
+            $this->betslip->addGlobalError(sprintf($this->errorCodes[9], self::MAXIMUM_WIN));
+            $this->betslip->setValid(false);
         }
 
         return $this;

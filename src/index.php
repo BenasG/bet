@@ -36,7 +36,7 @@ $betslip = [
         [
             // type: int
             // (mandatory) selection (event) ID on which player want to bet
-            'id' => 2,
+            'id' => 1,
 
             // type: float, max number of numbers after dot is 3
             // (mandatory) odds (coefficient) of our selection,
@@ -49,8 +49,11 @@ $betslip = [
     ],
 ];
 
-$bet = new Bet();
-$bet->make($betslip);
+$response = (new Bet)->make($betslip);
 
-print_r($bet->getSuccess());
-print_r($bet->getBetslip());
+print_r($response->getBetslip()->getBetslip());
+print_r($response->getBetslip()->getGlobalErrors());
+print_r($response->getBetslip()->getSelectionErrors());
+
+//print_r($bet->getSuccess());
+//print_r($bet->getBetslip());
