@@ -1,13 +1,23 @@
 # Bet
 Betslip validation composer package
 
+# Install
+
+```
+composer require benasg/bet
+```
+
 # Usage
 
 ```
-#!php
-
 use Benasg\Bet\Bet;
 
+$response = (new Bet)->make($betslip);
+
+```
+# Betslip example
+
+```
 $betslip = [
     // type: int
     // (mandatory) unique player id in the system
@@ -52,10 +62,38 @@ $betslip = [
         ],
     ],
 ];
-
-$bet = new Bet();
-$bet->make($betslip);
-
-print_r($bet->getSuccess());
-print_r($bet->getBetslip());
+```
+# Available methods
+```
+isSuccess();
+```
+```
+getBetslip();
+```
+```
+getBetslip()->isValid();
+```
+```
+getBetslip()->getBetslipArray();
+```
+```
+getBetslip()->getPlayerId();
+```
+```
+getBetslip()->getStakeAmount();
+```
+```
+getBetslip()->getSelections();
+```
+```
+getBetslip()->getExpectedWin();
+```
+```
+getBetslip()->getGlobalErrors();
+```
+```
+getBetslip()->getSelectionErrors();
+```
+```
+getBetslip()->getErrors();
 ```
