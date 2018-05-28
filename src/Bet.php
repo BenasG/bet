@@ -9,29 +9,7 @@ class Bet
 
     public function make($betslip = [])
     {
-        $betslip = new Betslip($betslip);
-
-        if (StructureValidation::validateStructure($betslip->getStructure(), $betslip->getBetslipArray())) {
-            $betslipValidation = new BetslipValidation($betslip);
-            
-            $betslipValidation
-                ->checkMinStakeAmount()
-                ->checkMaxStakeAmount()
-                ->checkMinSelectionsNumber()
-                ->checkMaxSelectionsNumber()
-                ->checkSelectionUniqueId()
-                ->checkMinOddsInterval()
-                ->checkMaxOddsInterval()
-                ->checkExpectedWin();
-
-        } else {
-            $betslip->addGlobalError('Betslip structure mismatch');
-            $betslip->setValid(false);
-        }
-
-        $this->setBetslip($betslip);
-
-        $this->setSuccess($betslip->isValid());
+        $this->validate(new Betslip($betslip));
 
         return $this;
     }
@@ -54,5 +32,30 @@ class Bet
     public function isSuccess()
     {
         return $this->success;
+    }
+
+    public function validate(Betslip $betslip)
+    {
+        if (StructureValidation::validateStructure($betslip->getStructure(), $betslip->getBetslipArray())) {
+            $betslipValidation = new BetslipValidation($betslip);
+            
+            $betslipValidation
+                ->checkMinStakeAmount()
+                ->checkMaxStakeAmount()
+                ->checkMinSelectionsNumber()
+                ->checkMaxSelectionsNumber()
+                ->checkSelectionUniqueId()
+                ->checkMinOddsInterval()
+                ->checkMaxOddsInterval()
+                ->checkExpectedWin();
+
+        } else {
+            $betslip->addGlobalError('Betslip structure mismatch');
+            $betslip->setValid(false);
+        }
+
+        $this->setBetslip($betslip);
+
+        $this->setSuccess($betslip->isValid());
     }
 }

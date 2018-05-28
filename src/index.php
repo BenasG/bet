@@ -49,7 +49,7 @@ $betslip = [
     ],
 ];
 
-$response = (new Bet)->make();
+$response = (new Bet)->make($betslip);
 
 print_r($response->getBetslip()->getBetslipArray());
 print_r($response->getBetslip()->getGlobalErrors());
