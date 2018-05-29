@@ -2,66 +2,112 @@
 
 namespace Benasg\Bet;
 
-class Betslip
+class Betslip extends AbstractBetslip
 {
+    /**
+     * @param array
+     */
     protected $betslip = [];
+
+    /**
+     * @param boolean
+     */
     protected $isValid = true;
-    protected $structure = [
-        'player_id:i',
-        'stake_amount:f',
-        'selections:a' => ['id:i','odds:f']
-    ];
 
     function __construct(array $betslip = [])
     {
         $this->setBetslip($betslip);
     }
 
+    /**
+     * Set betslip
+     */
     public function setBetslip($betslip)
     {
         $this->betslip = $betslip;
     }
 
+    /**
+     * Get structure
+     * 
+     * @return array
+     */
     public function getStructure()
     {
         return $this->structure;
     }
 
+    /**
+     * Set valid
+     */
     public function setValid($valid)
     {
         $this->isValid = $valid;
     }
 
+    /**
+     * Checks if valid
+     * 
+     * @return boolean
+     */
     public function isValid()
     {
         return $this->isValid;
     }
 
+    /**
+     * Add global error
+     */
     public function addGlobalError($error)
     {
         $this->betslip['errors'][] = $error;
     }
 
-    public function getBetslipArray()
+    /**
+     * Get betslip array
+     * 
+     * @return array
+     */
+    public function getBetslipArray(): array
     {
         return $this->betslip;
     }
 
+    /**
+     * Get player id
+     * 
+     * @return integer
+     */
     public function getPlayerId()
     {
         return $this->betslip['player_id'];
     }
 
+    /**
+     * Get stake amount
+     * 
+     * @return integer
+     */
     public function getStakeAmount()
     {
         return isset($this->betslip['stake_amount']) ? $this->betslip['stake_amount'] : 0;
     }
 
-    public function getSelections() 
+    /**
+     * Get selections
+     * 
+     * @return array
+     */
+    public function getSelections(): array
     {
         return isset($this->betslip['selections']) ? $this->betslip['selections'] : [];
     }
 
+    /**
+     * Get expected win
+     * 
+     * @return integer
+     */
     public function getExpectedWin()
     {
         $expectedWin = 1;
@@ -73,17 +119,30 @@ class Betslip
         return $expectedWin * $this->getStakeAmount();
     }
 
-    public function getGlobalErrors()
+    /**
+     * Get global errors
+     * 
+     * @return array
+     */
+    public function getGlobalErrors(): array
     {
         return isset($this->betslip['errors']) ? $this->betslip['errors'] : [];
     }
 
+    /**
+     * Add selection error
+     */
     public function addSelectionError($index, $error)
     {
         $this->betslip['selections'][$index]['errors'][] = $error;
     }
 
-    public function getSelectionErrors()
+    /**
+     * Get betslip selection errors
+     * 
+     * @return array
+     */
+    public function getSelectionErrors(): array
     {
         $selectionsErrors = [];
 
@@ -100,7 +159,12 @@ class Betslip
         return $selectionsErrors;
     }
 
-    public function getErrors()
+    /**
+     * Get all errors
+     * 
+     * @return array
+     */
+    public function getErrors(): array
     {
         return [
             'globals' => $this->getGlobalErrors(),

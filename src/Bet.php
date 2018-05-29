@@ -34,7 +34,7 @@ class Bet
         return $this->success;
     }
 
-    public function validate(Betslip $betslip)
+    protected function validate(Betslip $betslip)
     {
         if (StructureValidation::validateStructure($betslip->getStructure(), $betslip->getBetslipArray())) {
             $betslipValidation = new BetslipValidation($betslip);
