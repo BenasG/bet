@@ -2,7 +2,7 @@
 
 namespace Benasg\Bet;
 
-class BetslipValidation
+class BetslipValidation extends AbstractValidation
 {   
     const STAKE_AMOUNT_MIN = 0.3;
     const STAKE_AMOUNT_MAX = 10000;
@@ -14,21 +14,6 @@ class BetslipValidation
 
     protected $betslip;
 
-    protected $errorCodes = [
-        0  => 'Unknown error',
-        1  => 'Betslip structure mismatch',
-        2  => 'Minimum stake amount is %s',
-        3  => 'Maximum stake amount is %s',
-        4  => 'Minimum number of selections is %s',
-        5  => 'Maximum number of selections is %s',
-        6  => 'Minimum odds are %s',
-        7  => 'Maximum odds are %s',
-        8  => 'Duplicate IDs are not allowed',
-        9  => 'Maximum win amount is %s',
-        10 => 'Your previous action is not finished yet',
-        11 => 'Insufficient balance',
-    ];
-
     function __construct(Betslip $betslip)
     {
         $this->betslip = $betslip;
@@ -39,6 +24,11 @@ class BetslipValidation
         return $this->betslip;
     }
 
+    /**
+     * Checks min stake amount constraint
+     * 
+     * @return object
+     */
     public function checkMinStakeAmount()
     {
         if ($this->betslip->getStakeAmount() < self::STAKE_AMOUNT_MIN) {
@@ -49,6 +39,11 @@ class BetslipValidation
         return $this;
     }
 
+    /**
+     * Checks max stake amount constraint
+     * 
+     * @return object
+     */
     public function checkMaxStakeAmount()
     {
         if ($this->betslip->getStakeAmount() > self::STAKE_AMOUNT_MAX) {
@@ -59,6 +54,11 @@ class BetslipValidation
         return $this;
     }
 
+    /**
+     * Checks min selections number constraint
+     * 
+     * @return object
+     */
     public function checkMinSelectionsNumber()
     {
         if (count($this->betslip->getSelections()) < self::SELECTIONS_MIN_NUMBER) {
@@ -69,6 +69,11 @@ class BetslipValidation
         return $this;
     }
 
+    /**
+     * Checks max selections number constraint
+     * 
+     * @return object
+     */
     public function checkMaxSelectionsNumber()
     {
         if (count($this->betslip->getSelections()) > self::SELECTIONS_MAX_NUMBER) {
@@ -79,6 +84,11 @@ class BetslipValidation
         return $this;
     }
 
+    /**
+     * Checks selection unique id constraint
+     * 
+     * @return object
+     */
     public function checkSelectionUniqueId()
     {   
         $events = [];
@@ -95,6 +105,11 @@ class BetslipValidation
         return $this;
     }
 
+    /**
+     * Checks min odds interval constraint
+     * 
+     * @return object
+     */
     public function checkMinOddsInterval()
     {
         foreach ($this->betslip->getSelections() as $index => $selection) {
@@ -107,6 +122,11 @@ class BetslipValidation
         return $this;
     }
 
+     /**
+     * Checks max odds interval constraint
+     * 
+     * @return object
+     */
     public function checkMaxOddsInterval()
     {
         foreach ($this->betslip->getSelections() as $index => $selection) {
@@ -119,6 +139,11 @@ class BetslipValidation
         return $this;
     }
 
+     /**
+     * Checks expected win constraint
+     * 
+     * @return object
+     */
     public function checkExpectedWin()
     {   
         if ($this->betslip->getExpectedWin() > self::MAXIMUM_WIN) {
